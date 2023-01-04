@@ -24,7 +24,7 @@ public class Receive {
         channel.queueDeclare(QUEUE_NAME, false, false, false,null);
 
         //Because we want to receive all the time, we wont use a try-catch-clause because it would close and reopen instead of receiving without pause.
-        System.out.println("[*] Waiting for messages. To exit press CTRL + C.");
+        System.out.println("[*] Waiting for messages. To exit press Ctrl + c.");
 
         //Since the queue will deliver us messages asynchronously, we provide a callback in the form of a object that will buffer the messages until we're ready to use them.
         DeliverCallback deliverCallback = (consumerTag, delivery) -> {
