@@ -26,6 +26,9 @@ public class Receive {
         //Because we want to receive all the time, we wont use a try-catch-clause because it would close and reopen instead of receiving without pause.
         System.out.println("[*] Waiting for messages. To exit press Ctrl + c.");
 
+        //accept only ONE unack-ed message at a time
+        channel.basicQos(1);
+
         //Since the queue will deliver us messages asynchronously, we provide a callback in the form of a object that will buffer the messages until we're ready to use them.
         DeliverCallback deliverCallback = (consumerTag, delivery) -> {
             String message = new String(delivery.getBody(), StandardCharsets.UTF_8);
@@ -37,10 +40,12 @@ public class Receive {
                 throw new RuntimeException(e);
             } finally {
                 System.out.println(" [x] Done");
+                //impl a basic acknowledgment system
+                channel.basicAck(delivery.getEnvelope().getDeliveryTag(), false);
             }
         };
 
-        boolean autoAck = true; //acknowledgment
+        boolean autoAck = false; //acknowledgment
 
         channel.basicConsume(QUEUE_NAME, autoAck, deliverCallback, consumerTag -> {});
     }
